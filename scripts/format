@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Usage: ./scripts/format.sh
+set -e
+
+if [ -z "$VIRTUAL_ENV" ]; then
+    echo "Please activate your virtual environment before running this script."
+    exit 1
+fi
+
+if ! command -v black &> /dev/null; then
+    echo "Black is not installed. Please install it using 'pip install black'."
+    exit 1
+fi
+
+if ! command -v nbqa &> /dev/null; then
+    echo "nbqa is not installed. Please install it using 'pip install nbqa'."
+    exit 1
+fi
+
+find . -name "*.py" -not -path "./venv/*" -not -path "./.venv/*" -exec black {} +
+find . -name "*.ipynb" -not -path "./venv/*" -not -path "./.venv/*" -exec nbqa black {} +
+echo "All Python and Jupyter notebook files have been formatted."
